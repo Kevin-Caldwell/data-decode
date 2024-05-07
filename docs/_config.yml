@@ -23,7 +23,7 @@ email: kevinhcaldwell@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
     Kevin's Blog for all Projects!
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://kevin-caldwell.github.io/data-decode" # the base hostname & protocol for your site, e.g. http://example.com
 linkedin_username: Kevin Caldwell
 github_username:  Kevin-Caldwell
 
