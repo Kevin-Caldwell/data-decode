@@ -13,15 +13,13 @@ the Travelling Salesman can visit all the cities without
 having to go to each city more than once.'
 
 In my case, the inputs to a solver consists of a n by n matrix, containing 
-elements $a_{ij} = E(P_i, P_j)$, where $E(P_1,P_2)$ is an energy function 
-which returns the distance between the cities at points $P_1$ and $P_2$.
-
-
+elements $$a_{ij} = E(P_i, P_j)$$, where $$E(P_1,P_2)$$ is an energy function 
+which returns the distance between the cities at points $$P_1$$ and $$P_2$$.
 
 Exact algorithms do not scale nicely when the number of cities is 
 increased. One particular exact algorithm, is evaulating every 
 permutation, and keeping track of the shortest tour. As there are 
-$n!$ permutations for $n$ cities, the time complexity is $O(n!)$. 
+$$n!$$ permutations for $n$ cities, the time complexity is $$O(n!)$$.
 
 Python Code for this Algorithm is given below:
 
