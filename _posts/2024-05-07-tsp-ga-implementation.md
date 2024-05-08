@@ -4,10 +4,10 @@ title:  "Solving the Travelling Salesman Problem with Genetic Algorithms"
 date:   2024-05-06 21:55:37 -0400
 categories: tsp ga algorithms artificial-intelligence
 ---
-{% raw %}
 
 # Motivation
 
+{% raw %}
 The Travelling Salesman Problem states: 
 'Given a set of N cities, find the shortest tour, such that
 the Travelling Salesman can visit all the cities without 
@@ -23,6 +23,7 @@ permutation, and keeping track of the shortest tour. As there are
 $$n!$$ permutations for $$n$$ cities, the time complexity is $$O(n!)$$.
 
 Python Code for this Algorithm is given below:
+{% endraw %}
 
 {% highlight python %}
 def tsp_permute(
@@ -45,7 +46,8 @@ def tsp_permute(
                 shortest_distance = distance
 
     return best_path
-
+{% endhighlight %}
+{% raw %}
 
 To reduce the time complexity required to find a reasonable solution, 
 Approximate Solutions are used, one of which is the **Genetic Algorithm**.
