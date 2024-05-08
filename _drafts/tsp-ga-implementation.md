@@ -4,6 +4,7 @@ title:  "Solving the Travelling Salesman Problem with Genetic Algorithms"
 date:   2024-05-06 21:55:37 -0400
 categories: tsp ga algorithms artificial-intelligence
 ---
+{% raw %}
 
 # Motivation
 
@@ -44,11 +45,23 @@ def tsp_permute(
                 shortest_distance = distance
 
     return best_path
-{% endhighlight %}
+
 
 To reduce the time complexity required to find a reasonable solution, 
 Approximate Solutions are used, one of which is the **Genetic Algorithm**.
 
 # The Genetic Algorithm
 
-WIP
+The Genetic Algorithm is a general purpose approach for finding the minima 
+of a function $$f(x)$$. 
+
+1. It starts by generating an *initial population* of solutions, given by 
+$$ \{ x_0^0, x_1^0, ..., x_n^0 \} $$
+2. It evaluates the fitness of each solution in the population
+3. Select parents which can cross-over for a new generation
+4. Mutating the genes of the Parents to get a new population
+5. Repeat Step 2 as necessary, usually up to a fixed number or till improvement is negligible
+
+
+
+{% endraw %}
