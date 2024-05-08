@@ -2,7 +2,7 @@
 layout: post
 title:  "Solving the Travelling Salesman Problem with Genetic Algorithms"
 date:   2024-05-06 21:55:37 -0400
-categories: tsp ga algorithms artificial-intelligence
+tags: tsp ga algorithms artificial-intelligence
 ---
 
 # Motivation
