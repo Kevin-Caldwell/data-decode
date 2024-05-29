@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "Solving the Travelling Salesman Problem with Genetic Algorithms"
-date:   2024-05-06 21:55:37 -0400
+title:  "Solving the Travelling Salesman Problem with the Genetic Algorithm"
+date:   2024-05-07 21:55:37 -0400
 tags: tsp ga algorithms artificial-intelligence
 ---
 
@@ -64,6 +64,21 @@ $$ \{ x_0^0, x_1^0, ..., x_n^0 \} $$
 4. Mutating the genes of the Parents to get a new population
 5. Repeat Step 2 as necessary, usually up to a fixed number or till improvement is negligible
 
+# Implementation Details
 
+My implementation is somewhat naive, and although largely unoptimized, it demonstrates the 
+trends expected for TSP solutions using the Genetic Algorithm. 
+
+Each tour is represented by a list of cities, starting with the initial location of the salesman. 
+A cyclic path is assumed, with the last city in the list being connected to the first city.
+
+The *Fitness Function* returns the energy required to complete the path. A lower value corresponds 
+with higher fitness. 
+
+The *Genetic Variety* is a parameter related to the selection ratio 
+(Selection ratio = Genetic Variety / Population Size). It determines the number of solutions 
+allowed to cross-over into the next Generation.
+
+The *Initial Population* is a list of n randomized tours, obtained by shuffling a default tour.
 
 {% endraw %}

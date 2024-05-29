@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.5">Jekyll</generator><link href="http://localhost:4000/data-decode/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/data-decode/" rel="alternate" type="text/html" /><updated>2024-05-24T10:19:45-04:00</updated><id>http://localhost:4000/data-decode/feed.xml</id><title type="html">Data Docs</title><subtitle>Kevin&apos;s Blog for all Projects!</subtitle><entry><title type="html">Solving the Travelling Salesman Problem with the Genetic Algorithm</title><link href="http://localhost:4000/data-decode/2024/05/07/tsp-ga-implementation.html" rel="alternate" type="text/html" title="Solving the Travelling Salesman Problem with the Genetic Algorithm" /><published>2024-05-07T21:55:37-04:00</published><updated>2024-05-07T21:55:37-04:00</updated><id>http://localhost:4000/data-decode/2024/05/07/tsp-ga-implementation</id><content type="html" xml:base="http://localhost:4000/data-decode/2024/05/07/tsp-ga-implementation.html"><![CDATA[<h1 id="motivation">Motivation</h1>
+
+<p>The Travelling Salesman Problem states: 
+‘Given a set of N cities, find the shortest tour, such that
+the Travelling Salesman can visit all the cities without 
+having to go to each city more than once.’</p>
+
+<p>In my case, the inputs to a solver consists of a n by n matrix, containing 
+elements \(a_{ij} = E(P_i, P_j)\), where \(E(P_1,P_2)\) is an energy function 
+which returns the distance between the cities at points \(P_1\) and \(P_2\).</p>
+
+<p>Exact algorithms do not scale nicely when the number of cities is 
+increased. One particular exact algorithm, is evaulating every 
+permutation, and keeping track of the shortest tour. As there are 
+\(n!\) permutations for \(n\) cities, the time complexity is \(O(n!)\).</p>
+
+<p>Python Code for this Algorithm is given below:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">tsp_permute</span><span class="p">(</span>
+    <span class="n">distance_matrix</span><span class="p">:</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">,</span> <span class="n">start</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">point_count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">eval_fcn</span><span class="p">:</span> <span class="nb">callable</span>
+<span class="p">):</span>
+    <span class="s">"""Search through every permutation of paths to determine the optimal solution."""</span>
+    <span class="c1"># Initialize a default solution
+</span>    <span class="n">best_path</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">point_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">point_count</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">shortest_distance</span> <span class="o">=</span> <span class="n">eval_fcn</span><span class="p">(</span><span class="n">best_path</span><span class="p">,</span> <span class="n">distance_matrix</span><span class="p">)</span>
+
+    <span class="c1"># itertools.permutations imported from iter, loops through all permutations of list
+</span>    <span class="k">for</span> <span class="n">permutation</span> <span class="ow">in</span> <span class="n">itertools</span><span class="p">.</span><span class="n">permutations</span><span class="p">(</span><span class="n">best_path</span><span class="p">):</span>
+        <span class="c1"># Filter for permutations starting with the start index
+</span>        <span class="k">if</span> <span class="n">permutation</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">start</span><span class="p">:</span>
+
+            <span class="n">distance</span> <span class="o">=</span> <span class="n">eval_fcn</span><span class="p">(</span><span class="n">permutation</span><span class="p">,</span> <span class="n">distance_matrix</span><span class="p">)</span>
+            <span class="c1"># Update Lowest if distance is lower than current lowest
+</span>            <span class="k">if</span> <span class="n">distance</span> <span class="o">&lt;</span> <span class="n">shortest_distance</span><span class="p">:</span>
+                <span class="n">best_path</span> <span class="o">=</span> <span class="n">permutation</span>
+                <span class="n">shortest_distance</span> <span class="o">=</span> <span class="n">distance</span>
+
+    <span class="k">return</span> <span class="n">best_path</span></code></pre></figure>
+
+<p>To reduce the time complexity required to find a reasonable solution, 
+Approximate Solutions are used, one of which is the <strong>Genetic Algorithm</strong>.</p>
+
+<h1 id="the-genetic-algorithm">The Genetic Algorithm</h1>
+
+<p>The Genetic Algorithm is a general purpose approach for finding the minima 
+of a function \(f(x)\).</p>
+
+<ol>
+  <li>It starts by generating an <em>initial population</em> of solutions, given by 
+\(\{ x_0^0, x_1^0, ..., x_n^0 \}\)</li>
+  <li>It evaluates the fitness of each solution in the population</li>
+  <li>Select parents which can cross-over for a new generation</li>
+  <li>Mutating the genes of the Parents to get a new population</li>
+  <li>Repeat Step 2 as necessary, usually up to a fixed number or till improvement is negligible</li>
+</ol>
+
+<h1 id="implementation-details">Implementation Details</h1>
+
+<p>My implementation is somewhat naive, and although largely unoptimized, it demonstrates the 
+trends expected for TSP solutions using the Genetic Algorithm.</p>
+
+<p>Each tour is represented by a list of cities, starting with the initial location of the salesman. 
+A cyclic path is assumed, with the last city in the list being connected to the first city.</p>
+
+<p>The <em>Fitness Function</em> returns the energy required to complete the path. A lower value corresponds 
+with higher fitness.</p>
+
+<p>The <em>Genetic Variety</em> is a parameter related to the selection ratio 
+(Selection ratio = Genetic Variety / Population Size). It determines the number of solutions 
+allowed to cross-over into the next Generation.</p>
+
+<p>The <em>Initial Population</em> is a list of n randomized tours, obtained by shuffling a default tour.</p>]]></content><author><name></name></author><category term="tsp" /><category term="ga" /><category term="algorithms" /><category term="artificial-intelligence" /><summary type="html"><![CDATA[Motivation]]></summary></entry></feed>

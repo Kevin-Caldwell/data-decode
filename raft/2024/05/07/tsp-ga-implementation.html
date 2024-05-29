@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Solving the Travelling Salesman Problem with the Genetic Algorithm | Data Docs</title>
+<meta name="generator" content="Jekyll v3.9.5" />
+<meta property="og:title" content="Solving the Travelling Salesman Problem with the Genetic Algorithm" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Motivation" />
+<meta property="og:description" content="Motivation" />
+<link rel="canonical" href="http://localhost:4000/data-decode/2024/05/07/tsp-ga-implementation.html" />
+<meta property="og:url" content="http://localhost:4000/data-decode/2024/05/07/tsp-ga-implementation.html" />
+<meta property="og:site_name" content="Data Docs" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-05-07T21:55:37-04:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Solving the Travelling Salesman Problem with the Genetic Algorithm" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-05-07T21:55:37-04:00","datePublished":"2024-05-07T21:55:37-04:00","description":"Motivation","headline":"Solving the Travelling Salesman Problem with the Genetic Algorithm","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/data-decode/2024/05/07/tsp-ga-implementation.html"},"url":"http://localhost:4000/data-decode/2024/05/07/tsp-ga-implementation.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/data-decode/assets/main.css">
+</head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/data-decode/">Data Docs</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/data-decode/about/">About</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Solving the Travelling Salesman Problem with the Genetic Algorithm</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2024-05-07T21:55:37-04:00" itemprop="datePublished">May 7, 2024
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h1 id="motivation">Motivation</h1>
+
+<p>The Travelling Salesman Problem states: 
+‘Given a set of N cities, find the shortest tour, such that
+the Travelling Salesman can visit all the cities without 
+having to go to each city more than once.’</p>
+
+<p>In my case, the inputs to a solver consists of a n by n matrix, containing 
+elements \(a_{ij} = E(P_i, P_j)\), where \(E(P_1,P_2)\) is an energy function 
+which returns the distance between the cities at points \(P_1\) and \(P_2\).</p>
+
+<p>Exact algorithms do not scale nicely when the number of cities is 
+increased. One particular exact algorithm, is evaulating every 
+permutation, and keeping track of the shortest tour. As there are 
+\(n!\) permutations for \(n\) cities, the time complexity is \(O(n!)\).</p>
+
+<p>Python Code for this Algorithm is given below:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">tsp_permute</span><span class="p">(</span>
+    <span class="n">distance_matrix</span><span class="p">:</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">,</span> <span class="n">start</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">point_count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">eval_fcn</span><span class="p">:</span> <span class="nb">callable</span>
+<span class="p">):</span>
+    <span class="s">"""Search through every permutation of paths to determine the optimal solution."""</span>
+    <span class="c1"># Initialize a default solution
+</span>    <span class="n">best_path</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">point_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">point_count</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">shortest_distance</span> <span class="o">=</span> <span class="n">eval_fcn</span><span class="p">(</span><span class="n">best_path</span><span class="p">,</span> <span class="n">distance_matrix</span><span class="p">)</span>
+
+    <span class="c1"># itertools.permutations imported from iter, loops through all permutations of list
+</span>    <span class="k">for</span> <span class="n">permutation</span> <span class="ow">in</span> <span class="n">itertools</span><span class="p">.</span><span class="n">permutations</span><span class="p">(</span><span class="n">best_path</span><span class="p">):</span>
+        <span class="c1"># Filter for permutations starting with the start index
+</span>        <span class="k">if</span> <span class="n">permutation</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">start</span><span class="p">:</span>
+
+            <span class="n">distance</span> <span class="o">=</span> <span class="n">eval_fcn</span><span class="p">(</span><span class="n">permutation</span><span class="p">,</span> <span class="n">distance_matrix</span><span class="p">)</span>
+            <span class="c1"># Update Lowest if distance is lower than current lowest
+</span>            <span class="k">if</span> <span class="n">distance</span> <span class="o">&lt;</span> <span class="n">shortest_distance</span><span class="p">:</span>
+                <span class="n">best_path</span> <span class="o">=</span> <span class="n">permutation</span>
+                <span class="n">shortest_distance</span> <span class="o">=</span> <span class="n">distance</span>
+
+    <span class="k">return</span> <span class="n">best_path</span></code></pre></figure>
+
+<p>To reduce the time complexity required to find a reasonable solution, 
+Approximate Solutions are used, one of which is the <strong>Genetic Algorithm</strong>.</p>
+
+<h1 id="the-genetic-algorithm">The Genetic Algorithm</h1>
+
+<p>The Genetic Algorithm is a general purpose approach for finding the minima 
+of a function \(f(x)\).</p>
+
+<ol>
+  <li>It starts by generating an <em>initial population</em> of solutions, given by 
+\(\{ x_0^0, x_1^0, ..., x_n^0 \}\)</li>
+  <li>It evaluates the fitness of each solution in the population</li>
+  <li>Select parents which can cross-over for a new generation</li>
+  <li>Mutating the genes of the Parents to get a new population</li>
+  <li>Repeat Step 2 as necessary, usually up to a fixed number or till improvement is negligible</li>
+</ol>
+
+<h1 id="implementation-details">Implementation Details</h1>
+
+<p>My implementation is somewhat naive, and although largely unoptimized, it demonstrates the 
+trends expected for TSP solutions using the Genetic Algorithm.</p>
+
+<p>Each tour is represented by a list of cities, starting with the initial location of the salesman. 
+A cyclic path is assumed, with the last city in the list being connected to the first city.</p>
+
+<p>The <em>Fitness Function</em> returns the energy required to complete the path. A lower value corresponds 
+with higher fitness.</p>
+
+<p>The <em>Genetic Variety</em> is a parameter related to the selection ratio 
+(Selection ratio = Genetic Variety / Population Size). It determines the number of solutions 
+allowed to cross-over into the next Generation.</p>
+
+<p>The <em>Initial Population</em> is a list of n randomized tours, obtained by shuffling a default tour.</p>
+
+
+  </div><a class="u-url" href="/data-decode/2024/05/07/tsp-ga-implementation.html" hidden></a>
+</article>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+      availableFonts: ["TeX"],
+    },
+    tex2jax: {
+      inlineMath: [['$','$'],["\\(","\\)"]]},
+      displayMath: [ ['$$','$$'], ['\[','\]'] ],
+    TeX: {
+      extensions: ["AMSmath.js", "AMSsymbols.js", "color.js"],
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    },
+    showProcessingMessages: false,
+    messageStyle: "none",
+    imageFont: null,
+    "AssistiveMML": { disabled: true }
+  });
+</script>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/data-decode/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Data Docs</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Data Docs</li><li><a class="u-email" href="mailto:kevinhcaldwell@gmail.com">kevinhcaldwell@gmail.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/Kevin-Caldwell"><svg class="svg-icon"><use xlink:href="/data-decode/assets/minima-social-icons.svg#github"></use></svg> <span class="username">Kevin-Caldwell</span></a></li><li><a href="https://www.linkedin.com/in/kevinhcal"><svg class="svg-icon"><use xlink:href="/data-decode/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">kevinhcal</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Kevin&#39;s Blog for all Projects!</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+  <!-- mathjax config similar to math.stackexchange -->
+<!-- <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    jax: ["input/TeX", "output/HTML-CSS"],
+    tex2jax: {
+      inlineMath: [ ['$', '$'] ],
+      displayMath: [ ['$$', '$$']],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    messageStyle: "none",
+    "HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"] }
+  });
+  </script>
+  <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML" type="text/javascript"></script> -->
+  
+  </html>
+
