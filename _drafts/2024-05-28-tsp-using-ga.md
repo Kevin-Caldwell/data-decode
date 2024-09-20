@@ -67,6 +67,8 @@ The Initial population can be generated in two ways:
 
 ## Crossover
 
+
+## How are the Results Generated?
  
 
 ## Resources Used (Change Later)
@@ -75,21 +77,29 @@ The Initial population can be generated in two ways:
 
 [On Solving Travelling Salesman Problems by Genetic Algorithms](https://link.springer.com/chapter/10.1007/BFb0029743)
 
+[Crossover Operators in Genetic Algorithms: A Review](https://www.researchgate.net/profile/Padmavathi-Kora-2/publication/315175882_Crossover_Operators_in_Genetic_Algorithms_A_Review/links/59c6105d458515548f2f3b5f/Crossover-Operators-in-Genetic-Algorithms-A-Review.pdf)
+
 ## Implementation or TODO List
 
-- [ ] Compare Population Initialization Methods
+- [x] Compare Population Initialization Methods
   - [x] Random (Currently Implemented)
   - [x] Nearest Neighbor
-  - [ ] Implement as many TSP approximation methods as possible
-- [ ] Crossover Methods
+  - [x] Implement as many TSP approximation methods as possible
+
+- [x] Crossover Methods
   - [x] Ordered Crossover (OX)
-  - [ ] Partially Mapped Crossover (PMX)
-  - [ ] Cycle Crossover (CX)
+  - [x] Partially Mapped Crossover (PMX)
+  - [x] Cycle Crossover (CX)
   - [ ] Edge Recombination Crossover (ERX)
-- [ ] Library Parser
-  - [ ] Extract Graph from tsplib [git repo](https://github.com/mastqe/tsplib.git)
+
+- [x] Library Parser
+  - [x] Extract Graph from tsplib [git repo](https://github.com/mastqe/tsplib.git)
+
 - [ ] Testing
   - [ ] Initialization Methods: Random vs. Nearest Neighbor
   - [ ] Crossover Methods: OX vs. PMX vs. CX vs. ERX
   - [ ] OX better when randomized every time vs. once per generation?
-  - [ ] point 4
+
+
+- [ ] Figures Needed to Create
+  - [ ] Demonstration of each Crossover Method
