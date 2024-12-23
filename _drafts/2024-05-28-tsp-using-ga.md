@@ -33,14 +33,14 @@ This process is repeated until an exit condition is met.
 
 {% endraw %}
 
-The Pseudocode for the Genetic Algorithm is 
+The Pseudocode for the Genetic Algorithm is:
 {% highlight python %}
-```Python
+
 population = initialize_population()
 while evolution:
     fitness = fitness_function(population)
     population = crossover(population, fitness, selection_ratio)
-```
+
 {% endhighlight %}
 {% raw %}
 
