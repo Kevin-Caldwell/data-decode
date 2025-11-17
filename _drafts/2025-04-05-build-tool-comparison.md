@@ -17,20 +17,21 @@ The four central aspects of a build tool are:
 5. Code Optimization
 
 ## CMake
- CMake is a build tool widely used for the C/C++ Languages, but can be used to 
+ CMake is a build tool widely used for the C/C++ Languages, but can be used to
  build code from other languages as well.
 
 ## Make
 
-`make` is a utility that automatically determines which targets need to be 
+`make` is a utility that automatically determines which targets need to be
 
 ## Ninja
- Ninja is a build system which focuses on speed and is primarily designed to be 
- used by higher-level build systems like CMake. Per ninja-build.org, "It takes 
- as input the interdependencies of files (typically source code and output 
+ Ninja is a build system which focuses on speed and is primarily designed to be
+ used by higher-level build systems like CMake. Per ninja-build.org, "It takes
+ as input the interdependencies of files (typically source code and output
  executables) and orchestrates building them, quickly".
 
- It has been designed for speed, adaptability and ease of use. 
+ It has been designed for speed, adaptability and ease of use.
 
  Ninja looks for a file named build.ninja in the working directory and builds
- all out-of-date targets. 
+ all out-of-date targets.
+ 
