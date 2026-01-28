@@ -29,3 +29,7 @@ plugins:
   - jekyll-latex
 
 markdown: kramdown
+
+collections:
+  projects:
+    output:true
